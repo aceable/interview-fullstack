@@ -14,7 +14,7 @@ const Navbar: React.FC = () => {
           <div className="flex items-center space-x-4">
             <Link to="/" className="hover:text-blue-200">Home</Link>
             
-            {isAuthenticated ? (
+            {isAuthenticated && user ? (
               <>
                 <Link to="/profile" className="hover:text-blue-200">Profile</Link>
                 <button 
@@ -23,7 +23,7 @@ const Navbar: React.FC = () => {
                 >
                   Logout
                 </button>
-                <span className="ml-4">Welcome, {user?.username}</span>
+                <span className="ml-4">Welcome, {user.email}</span>
               </>
             ) : (
               <>

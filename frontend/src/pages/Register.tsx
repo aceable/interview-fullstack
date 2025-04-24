@@ -6,7 +6,6 @@ import { AxiosError } from 'axios';
 const Register: React.FC = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
-  const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
@@ -24,7 +23,7 @@ const Register: React.FC = () => {
 
     setLoading(true);
 
-    register(username, email, password)
+    register(email, password)
       .then(() => {
         navigate('/profile');
       })
@@ -47,20 +46,6 @@ const Register: React.FC = () => {
       )}
 
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
-        <div className="mb-4">
-          <label htmlFor="username" className="block text-gray-700 font-medium mb-2">
-            Username
-          </label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => { setUsername(e.target.value); }}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-
         <div className="mb-4">
           <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
             Email

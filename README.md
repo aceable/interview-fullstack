@@ -32,7 +32,7 @@ Create a `.env` file in the backend directory:
 
 ```
 NODE_ENV=development
-PORT=5000
+PORT=5001
 MONGODB_URI=mongodb://localhost:27017/interview-app
 DB_NAME=interview-app
 JWT_SECRET=interview-app-secret-change-this-in-production
@@ -55,7 +55,7 @@ npm run build
 npm start
 ```
 
-The backend API will be available at `http://localhost:5000`, and the frontend will be at `http://localhost:3000`.
+The backend API will be available at `http://localhost:5001`, and the frontend will be at `http://localhost:3000`.
 
 ## Features
 

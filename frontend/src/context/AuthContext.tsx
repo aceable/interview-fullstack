@@ -2,13 +2,30 @@ import React, { createContext, useState, useEffect, type ReactNode } from 'react
 import axios from 'axios';
 import type { User } from 'shared/types.ts';
 
+// Create a dedicated axios instance
+const api = axios.create({
+  baseURL: 'http://localhost:5001'
+});
+
+// Add a request interceptor to dynamically add the token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 interface AuthContextType {
   user: User;
   token: string | null;
   isAuthenticated: boolean;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (username: string, email: string, password: string) => Promise<void>;
+  register: (email: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -20,18 +37,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!token);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Configure axios
-  axios.defaults.baseURL = 'http://localhost:5000';
-
-  // Set the authorization header for axios if token exists
-  useEffect(() => {
-    if (token) {
-      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-    } else {
-      delete axios.defaults.headers.common.Authorization;
-    }
-  }, [token]);
-
   // Load user on initial load and token change
   useEffect(() => {
     const loadUser = async () => {
@@ -41,7 +46,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
 
       try {
-        const res = await axios.get('/api/auth/profile');
+        const res = await api.get('/api/auth/profile');
         setUser(res.data.data);
         setIsAuthenticated(true);
       } catch (error) {
@@ -55,12 +60,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     };
 
-    loadUser();
+    loadUser()
+      .catch((error: unknown) => {
+        console.error('Error in useEffect', error);
+        setLoading(false);
+      });
   }, [token]);
 
   const login = async (email: string, password: string) => {
     try {
-      const res = await axios.post('/api/auth/login', { email, password });
+      const res = await api.post('/api/auth/login', { email, password });
       localStorage.setItem('token', res.data.data.token);
       setToken(res.data.data.token);
       setUser(res.data.data.user);
@@ -71,9 +80,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const register = async (username: string, email: string, password: string) => {
+  const register = async (email: string, password: string) => {
     try {
-      const res = await axios.post('/api/auth/register', { username, email, password });
+      const res = await api.post<{ data: { token: string; user: string }}>('/api/auth/register', { email, password });
       localStorage.setItem('token', res.data.data.token);
       setToken(res.data.data.token);
       setUser(res.data.data.user);
@@ -89,7 +98,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setToken(null);
     setUser(null);
     setIsAuthenticated(false);
-    delete axios.defaults.headers.common.Authorization;
   };
 
   return (
@@ -109,4 +117,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
+// Export the api instance so it can be used in other files
+export { api };
 export default AuthContext;

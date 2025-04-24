@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 
-import { ObjectId } from 'mongodb';
+import type { Filter, InferIdType, InsertOneResult, ObjectId, UpdateFilter } from 'mongodb';
 import Datastore from 'nedb';
-import { User } from '../../../shared/types.ts';
 // Add MongoDB's ObjectId for ID compatibility
 
 const __dirname = import.meta.url;
@@ -14,8 +14,10 @@ const collections: Record<string, Datastore> = {};
 // Data directory path
 const DATA_DIR = path.join(__dirname, '..', '..', 'data');
 
+export interface Document { _id?: string;[key: string]: unknown }
+
 // Initialize database by ensuring data directory exists
-export const connectToDatabase = async () => {
+export const connectToDatabase = () => {
   try {
     // Create data directory if it doesn't exist
     if (!fs.existsSync(DATA_DIR)) {
@@ -44,12 +46,10 @@ export const getCollection = (collectionName: string) => {
   // Return a MongoDB-compatible API wrapper
   return {
     // Find one document
-    findOne: async (query: any): Promise<User> => {
+    findOne: async <T = unknown>(query: Filter<T>): Promise<T | null> => {
       // Handle ObjectId conversion for _id queries
-      const processedQuery = processQuery(query);
-      
       return new Promise((resolve, reject) => {
-        collections[collectionName].findOne(processedQuery, (err: Error | null, doc: any) => {
+        collections[collectionName].findOne(query, (err: Error | null, doc: T | null) => {
           if (err) reject(err);
           resolve(doc);
         });
@@ -57,36 +57,27 @@ export const getCollection = (collectionName: string) => {
     },
     
     // Insert one document
-    insertOne: async (document: any) => {
+    insertOne: async <T = unknown>(document: Omit<T, '_id'> & { _id?: string | ObjectId }): Promise<InsertOneResult<T>> => {
       // Generate MongoDB-compatible ObjectId if _id is missing
-      if (!document._id) {
-        document._id = new ObjectId().toString();
-      }
+      document._id ??= crypto.randomUUID();
       
       return new Promise((resolve, reject) => {
-        collections[collectionName].insert(document, (err: Error | null, newDoc: any) => {
+        collections[collectionName].insert(document, (err: Error | null, newDoc) => {
           if (err) reject(err);
           resolve({
             acknowledged: true,
-            insertedId: {
-              toString: () => newDoc._id,
-              // Add ObjectId compatibility
-              toHexString: () => newDoc._id
-            }
+            insertedId: newDoc._id as InferIdType<T>,
           });
         });
       });
     },
     
     // Find many documents
-    find: async (query: any) => {
-      // Handle ObjectId conversion for _id queries
-      const processedQuery = processQuery(query);
-      
+    find: <T = unknown>(query: Filter<T>) => {
       const cursor = {
         toArray: async () => {
           return new Promise((resolve, reject) => {
-            collections[collectionName].find(processedQuery, (err: Error | null, docs: any[]) => {
+            collections[collectionName].find(query, (err: Error | null, docs: any[]) => {
               if (err) reject(err);
               resolve(docs);
             });
@@ -97,13 +88,10 @@ export const getCollection = (collectionName: string) => {
     },
     
     // Update one document
-    updateOne: async (filter: any, update: any) => {
-      // Handle ObjectId conversion for _id queries
-      const processedFilter = processQuery(filter);
-      
+    updateOne: async <T = unknown>(filter: Filter<T>, update: UpdateFilter<T>) => {
       return new Promise((resolve, reject) => {
         collections[collectionName].update(
-          processedFilter, 
+          filter, 
           { $set: update.$set }, 
           { multi: false, upsert: false },
           (err: Error | null, numReplaced: number) => {
@@ -119,13 +107,10 @@ export const getCollection = (collectionName: string) => {
     },
     
     // Delete one document
-    deleteOne: async (filter: any) => {
-      // Handle ObjectId conversion for _id queries
-      const processedFilter = processQuery(filter);
-      
+    deleteOne: async <T = unknown>(filter: Filter<T>) => {
       return new Promise((resolve, reject) => {
         collections[collectionName].remove(
-          processedFilter, 
+          filter, 
           { multi: false },
           (err: Error | null, numRemoved: number) => {
             if (err) reject(err);
@@ -140,36 +125,8 @@ export const getCollection = (collectionName: string) => {
   };
 };
 
-// Utility function to process ObjectId in queries
-function processQuery(query: any): any {
-  // If no query or not an object, return as is
-  if (!query || typeof query !== 'object') {
-    return query;
-  }
-  
-  // Clone the query to avoid modifying the original
-  const processedQuery = { ...query };
-  
-  // Process _id fields to handle both ObjectId instances and string IDs
-  if (processedQuery._id) {
-    if (processedQuery._id instanceof ObjectId) {
-      processedQuery._id = processedQuery._id.toString();
-    } else if (typeof processedQuery._id === 'object' && processedQuery._id.$in) {
-      // Handle $in operator for _id
-      processedQuery._id.$in = processedQuery._id.$in.map((id: any) => 
-        id instanceof ObjectId ? id.toString() : id
-      );
-    }
-  }
-  
-  return processedQuery;
-}
-
 // For backward compatibility, but not used with NeDB
 export const getDatabase = () => {
   console.warn('getDatabase() is deprecated with NeDB implementation');
   return { collection: getCollection };
 };
-
-// Export MongoDB's ObjectId for use in other parts of the application
-export { ObjectId };

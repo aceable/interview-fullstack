@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-import type { UserRole } from '../../../shared/types.ts';
+import type { User, UserRole } from '../../../shared/types.ts';
 import { getCollection } from '../config/database.ts';
 
 const JWT_SECRET = process.env.JWT_SECRET ?? 'interview-app-secret';
@@ -9,7 +9,6 @@ const JWT_SECRET = process.env.JWT_SECRET ?? 'interview-app-secret';
 export interface AuthRequest extends Request {
   user?: {
     id: string;
-    username: string;
     email: string;
     role: UserRole;
   };
@@ -27,11 +26,11 @@ export const protect = async (req: AuthRequest, res: Response, next: NextFunctio
     }
 
     // Verify token
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
+    const decoded = jwt.verify(token, JWT_SECRET) as jwt.JwtPayload & { id: string };
     
     // Get user from the token
     const usersCollection = getCollection('users');
-    const user = await usersCollection.findOne({ _id: decoded.id });
+    const user = await usersCollection.findOne<User>({ _id: decoded.id });
     
     if (!user) {
       return res.status(401).json({
@@ -42,8 +41,7 @@ export const protect = async (req: AuthRequest, res: Response, next: NextFunctio
     
     // Set user to req.user
     req.user = {
-      id: user._id.toString(),
-      username: user.username,
+      id: user._id,
       email: user.email,
       role: user.role
     };

@@ -1,4 +1,5 @@
 // eslint.config.js
+import eslint from '@eslint/js';
 import prettierConfig from 'eslint-config-prettier';
 import eslintPluginImport from 'eslint-plugin-import';
 import tseslint from 'typescript-eslint';
@@ -9,6 +10,7 @@ export default tseslint.config(
     ignores: ['node_modules', 'dist', 'build', 'coverage', './*.ts', 'frontend/*.js', 'backend/*.js'],
   },
   // TypeScript parser and recommended configs
+  eslint.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
   // Import plugin configuration
@@ -73,7 +75,13 @@ export default tseslint.config(
       ],
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_' }],
-      '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          prefer: 'type-imports',
+          disallowTypeAnnotations: true
+        }
+      ],
       '@typescript-eslint/consistent-type-exports': 'error',
       '@typescript-eslint/no-unnecessary-condition': 'error',
       '@typescript-eslint/prefer-nullish-coalescing': 'error',
@@ -82,6 +90,20 @@ export default tseslint.config(
       '@typescript-eslint/await-thenable': 'error',
       '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/no-non-null-assertion': 'error',
+
+      'prettier/prettier': [
+        'error',
+        {
+          arrowParens: 'always',
+          bracketSpacing: true,
+          endOfLine: 'lf',
+          printWidth: 200,
+          semi: true,
+          singleQuote: true,
+          tabWidth: 2,
+          trailingComma: 'all',
+        },
+      ],
     },
   },
   // Prettier config (must be last)

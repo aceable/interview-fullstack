@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { api } from '../context/AuthContext'; // Adjust the import based on your project structure
 import { useAuth } from '../hooks/useAuth';
 
 const Home: React.FC = () => {
@@ -10,7 +11,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const checkApiStatus = async () => {
       try {
-        const response = await axios.get('/api/status');
+        const response = await api.get('/api/status');
         setApiStatus(response.data.data.status);
       } catch (error) {
         console.error('Error checking API status', error);
@@ -20,7 +21,9 @@ const Home: React.FC = () => {
       }
     };
 
-    checkApiStatus();
+    checkApiStatus().catch((error: unknown) => {
+      console.error('Error in useEffect', error);
+    });
   }, []);
 
   return (

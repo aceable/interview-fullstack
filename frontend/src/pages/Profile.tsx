@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useAuth } from '../hooks/useAuth.ts';
+import { api } from '../context/AuthContext.tsx'; // Adjust the import based on your project structure
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
@@ -12,7 +12,7 @@ const Profile: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const protectedResponse = await axios.get< { message: string }>('/api/protected');
+      const protectedResponse = await api.get< { message: string }>('/api/protected');
       setProtectedData(protectedResponse.data.message);
     } catch (error) {
       console.error('Error fetching protected data', error);
@@ -20,9 +20,9 @@ const Profile: React.FC = () => {
     }
 
     // Only try to access admin route if user is admin
-    if (user?.role === 'admin') {
+    if (user.role === 'admin') {
       try {
-        const adminResponse = await axios.get< { message: string }>('/api/admin');
+        const adminResponse = await api.get< { message: string }>('/api/admin');
         setAdminData(adminResponse.data.message);
       } catch (error) {
         console.error('Error fetching admin data', error);
@@ -57,21 +57,17 @@ const Profile: React.FC = () => {
         <h2 className="text-xl font-semibold mb-4">User Information</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="mb-4">
-            <p className="text-gray-600">Username</p>
-            <p className="font-medium">{user?.username}</p>
-          </div>
-          <div className="mb-4">
             <p className="text-gray-600">Email</p>
-            <p className="font-medium">{user?.email}</p>
+            <p className="font-medium">{user.email}</p>
           </div>
           <div className="mb-4">
             <p className="text-gray-600">Role</p>
-            <p className="font-medium">{user?.role}</p>
+            <p className="font-medium">{user.role}</p>
           </div>
           <div className="mb-4">
             <p className="text-gray-600">Joined</p>
             <p className="font-medium">
-              {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
+              {new Date(user.createdAt).toLocaleDateString()}
             </p>
           </div>
         </div>
@@ -88,7 +84,7 @@ const Profile: React.FC = () => {
         )}
       </div>
 
-      {user?.role === 'admin' && (
+      {user.role === 'admin' && (
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4">Admin Data</h2>
           {adminError ? (

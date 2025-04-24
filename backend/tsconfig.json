@@ -16,6 +16,8 @@
     "isolatedModules": true,
     "noEmit": true,
     "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "removeComments": false
   },
   "include": [
     "src/**/*"
