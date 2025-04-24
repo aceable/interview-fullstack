@@ -15,14 +15,17 @@ interview-fullstack/
 
 ## Prerequisites
 
-- Node.js 16+ and npm
-- MongoDB running locally or a remote MongoDB instance
+- Node.js 22+ and npm
+- Faked MongoDB running in file storage with NeDB
 
 ## Setup Instructions
 
 ### 1. Install dependencies
 
+If you haven't, install either Node 22 or [NVM](https://github.com/nvm-sh/nvm) to switch to Node 22 for this repo
+
 ```bash
+nvm i
 npm install
 ```
 
@@ -37,10 +40,6 @@ MONGODB_URI=mongodb://localhost:27017/interview-app
 DB_NAME=interview-app
 JWT_SECRET=interview-app-secret-change-this-in-production
 ```
-
-### 3. Start MongoDB
-
-Make sure MongoDB is running on your system or use a cloud MongoDB instance and update the `.env` file accordingly.
 
 ### 4. Build and start the application
 
@@ -66,16 +65,6 @@ The backend API will be available at `http://localhost:5001`, and the frontend w
 - Protected API routes
 - React SPA frontend with React Router
 - Responsive UI with Tailwind CSS
-
-## Adding Intentionally Broken Code
-
-To create interview scenarios, you can introduce intentional bugs in:
-
-1. Authentication flow
-2. API routes and controllers
-3. React component rendering
-4. State management
-5. Database interactions
 
 ## Available Scripts
 
