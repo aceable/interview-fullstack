@@ -1,6 +1,6 @@
 # Interview Fullstack Application
 
-A modern fullstack application built with Node.js, Express, MongoDB, React, and TypeScript. This project is designed to be used as a shell for interviewing candidates by introducing intentionally broken code for debugging exercises.
+A modern fullstack application built with Node.js, Express, MongoDB, React, and TypeScript. This project is designed to be used as a shell for interviewing candidates by introducing intentionally broken code for debugging exercises, while simulating several of the concepts used at Aceable today.
 
 ## Project Structure
 
@@ -25,8 +25,7 @@ interview-fullstack/
 If you haven't, install either Node 22 or [NVM](https://github.com/nvm-sh/nvm) to switch to Node 22 for this repo
 
 ```bash
-nvm i
-npm install
+npm ci
 ```
 
 ### 2. Create environment files
