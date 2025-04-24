@@ -48,6 +48,8 @@ Development mode with hot reloading:
 npm run dev
 ```
 
+OR with VSCode, run "Launch Full Stack" from "Run and Debug"
+
 Production mode:
 ```bash
 npm run build
