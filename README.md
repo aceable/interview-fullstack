@@ -61,20 +61,12 @@ Development mode with hot reloading:
 npm run dev
 ```
 
-OR with VSCode, run "Launch Full Stack" from "Run and Debug"
-
-Production mode:
-```bash
-npm run build
-npm start
-```
-
 The backend API will be available at `http://localhost:5001`, and the frontend will be at `http://localhost:3000`.
 
 ## Features
 
 - TypeScript for both frontend and backend
-- MongoDB database integration
+- File NoSQL database mimicing MongoDB
 - Authentication system with JWT
 - Role-based authorization (user/admin)
 - Protected API routes
