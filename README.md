@@ -1,6 +1,20 @@
 # Interview Fullstack Application
 
-A modern fullstack application built with Node.js, Express, MongoDB, React, and TypeScript. This project is designed to be used as a shell for interviewing candidates by introducing intentionally broken code for debugging exercises, while simulating several of the concepts used at Aceable today.
+## 🎗️ Read This First
+
+* You should have been given this 24 hours before your technical call
+* Its not required but we recommend downloading and opening this codebase in your favorite IDE ahead of time
+* Prepare any tools you may want to use during interview to talk about the code, make any changes, run it locally, etc. AI tools are allowed.
+* The technical interview will be a mock peer review with a "junior dev".
+* You'll be reviewing new code the Junior Dev added to this app. 
+    * All new code should be files with Note in the name
+    * Or where <UserNotes> is called
+* Following the README.md below, this fullstack repo should run on any standard Mac, Linux, or Windows WSL with Node 22 installed. Making the app run is not part of the test.
+* If you start to analyze the code or make any changes (not required), please document your process. It is more important to us we understand how you think than what you change.
+
+## 🆕 Overview
+
+This is a modern fullstack application built with Node.js, Express, MongoDB, React, and TypeScript. This project is designed to be used as a shell for interviewing candidates by introducing intentionally broken code for debugging exercises, while simulating several of the concepts used at Aceable today.
 
 ## Project Structure
 
