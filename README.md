@@ -2,15 +2,15 @@
 
 ## 🎗️ Read This First
 
-* You should have been given this 24 hours before your technical call
-* Its not required but we recommend downloading and opening this codebase in your favorite IDE ahead of time
-* Prepare any tools you may want to use during interview to talk about the code, make any changes, run it locally, etc. AI tools are allowed.
-* The technical interview will be a mock peer review with a "junior dev".
-* You'll be reviewing new code the Junior Dev added to this app. 
-    * All new code should be files with Note in the name
-    * Or where <UserNotes> is called
-* Following the README.md below, this fullstack repo should run on any standard Mac, Linux, or Windows WSL with Node 22 installed. Making the app run is not part of the test.
-* If you start to analyze the code or make any changes (not required), please document your process. It is more important to us we understand how you think than what you change.
+* You should have received this 24 hours before your technical call.
+* It is not required, but we recommend downloading and opening this codebase in your favorite IDE ahead of time.
+* Prepare any tools you may want to use during the interview to discuss the code, make changes, run it locally, etc. AI tools are allowed.
+* The technical interview will be a mock peer review with a "junior developer."
+* You will be reviewing new code the Junior Developer added to this app:
+    * All new code should be in files with "Note" in the name
+    * Or in files where <UserNotes> is called
+* By following the README below, this fullstack repo should run on any standard Mac, Linux, or Windows WSL with Node 22 installed. Running the app is not part of the test.
+* If you start to analyze the code or make any changes (not required), please document your process. It is more important for us to understand how you think than what you change.
 
 ## 🆕 Overview
 
