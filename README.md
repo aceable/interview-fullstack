@@ -8,7 +8,7 @@
 * The technical interview will be a mock peer review with a "junior developer."
 * You will be reviewing new code the Junior Developer added to this app:
     * All new code should be in files with "Note" in the name
-    * Or in files where <UserNotes> is called
+    * Or in files where `<UserNotes>` is called
 * By following the README below, this fullstack repo should run on any standard Mac, Linux, or Windows WSL with Node 22 installed. Running the app is not part of the test.
 * If you start to analyze the code or make any changes (not required), please document your process. It is more important for us to understand how you think than what you change.
 
